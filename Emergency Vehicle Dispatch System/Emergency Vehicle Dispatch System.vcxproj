@@ -120,7 +120,16 @@
     <Text Include="requests.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Headers\Graph.cpp" />
+    <ClCompile Include="Headers\Zipcode.cpp" />
     <ClCompile Include="source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Headers\Edge.h" />
+    <ClInclude Include="Headers\EmergencyVehicle.h" />
+    <ClInclude Include="Headers\Graph.h" />
+    <ClInclude Include="Headers\Request.h" />
+    <ClInclude Include="Headers\Zipcode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
