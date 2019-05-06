@@ -12,7 +12,9 @@ void Graph::addVehicleToZip(EmergencyVehicle vehicle_to_add)
 
 void Graph::populateGraph(std::ifstream& in)
 {
-	int vehicle_id, vehicle_type, zip = 0;
+	int vehicle_id = 0;
+	int vehicle_type = 0;
+	int zip = 0;
 	int previous_zip = 0;
 
 	while (in >> vehicle_id >> vehicle_type >> zip)
@@ -36,18 +38,27 @@ void Graph::populateGraph(std::ifstream& in)
 
 void Graph::addEdges(std::ifstream& in)
 {
-	int zipcode1, zipcode2, distance = 0;
-	int cnt = 0;
+	int zipcode1 = 0;
+	int zipcode2 = 0;
+	int distance = 0;
+	int previous_zip = 0;
+	int idx_of_first_zip = 0;
+	int idx_of_next_zip = 0;
 	while (in >> zipcode1 >> zipcode2 >> distance)
 	{
-		Edge edge1(zipcode2, distance);
-		zipcodes[cnt].addAdjacentEdge(edge1);
-			
-		if (cnt != zipcodes.size() - 1)
+		idx_of_next_zip = (zipcode2 % 10) + 1;
+		if (previous_zip != zipcode1)
 		{
-			Edge edge2(zipcode1, distance);
-			zipcodes[cnt + 1].addAdjacentEdge(edge2);
+			idx_of_first_zip++;
 		}
-		cnt++;
+
+		Edge edge1(zipcode2, distance);
+		zipcodes[idx_of_first_zip].addAdjacentEdge(edge1);
+
+		
+		Edge edge2(zipcode1, distance);
+		zipcodes[idx_of_next_zip].addAdjacentEdge(edge2);
+
+		previous_zip = zipcode1;
 	}
 }
