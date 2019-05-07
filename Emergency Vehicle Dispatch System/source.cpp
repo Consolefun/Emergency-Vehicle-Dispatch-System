@@ -6,6 +6,7 @@ using namespace std;
 
 int findZipcodeIdx(Graph g, int zip);
 void readInRequests(vector<Request>& requests, ifstream& in);
+void processRequests(Graph g, vector<Request> req);
 
 int main()
 {
@@ -27,53 +28,7 @@ int main()
 	graph.populateGraph(vehicle_data);
 	graph.addEdges(distance_data);
 	readInRequests(requests, request_data);
-
-	/*for (int i = 0; i < graph.getGraph().size(); i++)
-	{
-		for (int j = 0; j < graph.getGraph()[i].getVehicles().size(); j++)
-		{
-			cout << graph.getGraph()[i].getVehicles()[j].id << " " << graph.getGraph()[i].getVehicles()[j].type << " " << graph.getGraph()[i].getZipcode() << endl;
-		}
-	}*/
-
-	/*for (int i = 0; i < graph.getGraph().size(); i++)
-	{
-		for (int j = 0; j < graph.getGraph()[i].getAdjacents().size(); j++)
-		{
-			cout << graph.getGraph()[graph.getGraph()[i].getAdjacents()[j].target_idx].getZipcode() << " " << graph.getGraph()[i].getAdjacents()[j].distance <<  endl;
-		}
-	}*/
-
-	/*for (int i = 0; i < requests.size(); i++)
-	{
-		cout << requests[i].id << " " << requests[i].type << " " << requests[i].zipcode << " " << requests[i].vehicle_id << endl;
-	}*/
-
-	/*graph.dijkstras(0);
-	vector<Zipcode> shortest_paths = graph.getGraph();
-
-	for (int i = 0; i < shortest_paths.size(); i++)
-	{
-		cout << "Shortest path from " << graph.getGraph()[0].getZipcode() << " to " << shortest_paths[i].getZipcode() << " is " << shortest_paths[i].getDistance() << endl;
-	}
-	cout << endl;*/
-
-	for (int i = 0; i < requests.size(); i++)
-	{
-		int idx_of_zip = findZipcodeIdx(graph, requests[i].zipcode);
-		if (idx_of_zip != -1)
-		{
-			multimap<int, Zipcode> shortest_paths = graph.dijkstras(idx_of_zip);
-
-			for (auto it = shortest_paths.begin(); it != shortest_paths.end(); ++it)
-			{
-				cout << "Shortest path from " << graph.getGraph()[idx_of_zip].getZipcode() << " to " << it->second.getZipcode() << " is " << it->first << endl;
-			}
-			cout << endl;
-
-			graph.resetGraph();
-		}
-	}
+	processRequests(graph, requests);
 
 	// close all I/O streams
 	vehicle_data.close();
@@ -111,4 +66,38 @@ void readInRequests(vector<Request>& requests, ifstream& in)
 	}
 }
 
+void processRequests(Graph g, vector<Request> req)
+{
+	for (int i = 0; i < req.size(); i++)
+	{
+		int idx_of_allocation = 0;
+		int zip_of_allocation = 0;
+		int idx_of_request = findZipcodeIdx(g, req[i].zipcode);
+		if (idx_of_request != -1)
+		{
+			multimap<int, Zipcode> shortest_paths = g.dijkstras(idx_of_request);
 
+			for (auto it = shortest_paths.begin(); it != shortest_paths.end(); ++it) {
+				idx_of_allocation = findZipcodeIdx(g, it->second.getZipcode());
+				vector<EmergencyVehicle> current_vehicles = g.getGraph()[idx_of_allocation].getVehicles();
+
+				for (int j = 0; j < current_vehicles.size(); j++) {
+					if (req[i].type == current_vehicles[j].type && current_vehicles[j].available == true) {
+						req[i].fillRequest(current_vehicles[j].id, it->first);
+						zip_of_allocation = it->second.getZipcode();
+						g.allocateVehicleAtZip(idx_of_allocation, req[i].vehicle_id);
+						break;
+					}
+				}
+
+				if (req[i].vehicle_id != -1)
+				{
+					break;
+				}
+			}
+			cout << "Vehicle #" << req[i].vehicle_id << " was dispatched from " << zip_of_allocation << " to "
+			<< req[i].zipcode << " with distance " << req[i].distance << endl;
+		}
+		g.resetGraph();
+	}
+}
