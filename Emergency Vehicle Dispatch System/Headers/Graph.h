@@ -2,6 +2,7 @@
 #define GRAPH_H
 
 #include <fstream>
+#include <map>
 #include "./Zipcode.h"
 
 class Graph
@@ -19,7 +20,7 @@ public:
   void addEdges(std::ifstream& in);
   int getMinZipcode(std::vector<Zipcode> z);
   void resetGraph();
-  void dijkstras(int idx);
+  std::multimap<int, Zipcode> dijkstras(int idx);
 
 };
 

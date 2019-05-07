@@ -109,12 +109,12 @@ void Graph::resetGraph()
 	}
 }
 
-void Graph::dijkstras(int current_idx)
+std::multimap<int, Zipcode> Graph::dijkstras(int current_idx)
 {
-	std::vector<Zipcode> visited_zipcodes;
+	std::multimap<int, Zipcode> shortest_paths;
 
 	zipcodes[current_idx].setDistance(0);
-	while (visited_zipcodes.size() != zipcodes.size())
+	while (shortest_paths.size() != zipcodes.size())
 	{
 		std::vector<Edge> adjacents = zipcodes[current_idx].getAdjacents();
 
@@ -126,7 +126,8 @@ void Graph::dijkstras(int current_idx)
 			}
 		}
 		zipcodes[current_idx].setVisited(true);
-		visited_zipcodes.push_back(zipcodes[current_idx]);
+		shortest_paths.insert(std::pair<int, Zipcode>(zipcodes[current_idx].getDistance(), zipcodes[current_idx]));
 		current_idx = getMinZipcode(zipcodes);
 	}
+	return shortest_paths;
 }
