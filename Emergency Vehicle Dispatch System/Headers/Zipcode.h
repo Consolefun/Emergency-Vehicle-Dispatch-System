@@ -20,14 +20,14 @@ public:
 	// Getters
 	int getZipcode() { return zipcode; };
 	float getDistance() { return min_distance; };
-	bool getVisited() { return visited; };
+	bool isVisited() { return visited; };
 	std::vector<Edge> getAdjacents() { return adjacents; };
 	std::vector<EmergencyVehicle> getVehicles() { return vehicles; };
 
 	//Setters
 	void setZipcode(int new_zip) { zipcode = new_zip; };
 	void setDistance(float new_distance) { min_distance = new_distance; };
-	void setVisited() { visited = true; };
+	void setVisited(bool flag) { visited = flag; };
 	
 	//Member functions
 	void addAdjacentEdge(Edge new_edge);

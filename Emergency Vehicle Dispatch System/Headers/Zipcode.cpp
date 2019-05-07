@@ -3,7 +3,6 @@
 Zipcode::Zipcode()
 {
 	zipcode = 0;
-	previous_zipcode = 0;
 	min_distance = INFINITY;
 	visited = false;
 }
