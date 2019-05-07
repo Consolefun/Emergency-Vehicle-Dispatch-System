@@ -3,17 +3,18 @@
 
 struct Edge
 {
-  int target;
+  int target_idx;
   int distance;
 
   Edge()
   {
-	  target, distance = 0;
+	  target_idx = 0;
+	  distance = 0;
   }
 
   Edge(int zip, int weight)
   {
-	  target = zip;
+	  target_idx = zip;
 	  distance = weight;
   }
 };
