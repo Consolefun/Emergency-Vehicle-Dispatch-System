@@ -4,6 +4,7 @@
 
 using namespace std;
 
+int findZipcodeIdx(Graph g, int zip);
 void readInRequests(vector<Request>& requests, ifstream& in);
 
 int main()
@@ -39,7 +40,7 @@ int main()
 	{
 		for (int j = 0; j < graph.getGraph()[i].getAdjacents().size(); j++)
 		{
-			cout << graph.getGraph()[i].getAdjacents()[j].target << " " << graph.getGraph()[i].getAdjacents()[j].distance <<  endl;
+			cout << graph.getGraph()[graph.getGraph()[i].getAdjacents()[j].target_idx].getZipcode() << " " << graph.getGraph()[i].getAdjacents()[j].distance <<  endl;
 		}
 	}*/
 
@@ -48,6 +49,33 @@ int main()
 		cout << requests[i].id << " " << requests[i].type << " " << requests[i].zipcode << " " << requests[i].vehicle_id << endl;
 	}*/
 
+	/*graph.dijkstras(0);
+	vector<Zipcode> shortest_paths = graph.getGraph();
+
+	for (int i = 0; i < shortest_paths.size(); i++)
+	{
+		cout << "Shortest path from " << graph.getGraph()[0].getZipcode() << " to " << shortest_paths[i].getZipcode() << " is " << shortest_paths[i].getDistance() << endl;
+	}
+	cout << endl;*/
+
+	for (int i = 0; i < requests.size(); i++)
+	{
+		int idx_of_zip = findZipcodeIdx(graph, requests[i].zipcode);
+		if (idx_of_zip != -1)
+		{
+			graph.dijkstras(idx_of_zip);
+			vector<Zipcode> shortest_paths = graph.getGraph();
+
+			for (int i = 0; i < shortest_paths.size(); i++)
+			{
+				cout << "Shortest path from " << graph.getGraph()[idx_of_zip].getZipcode() << " to " << shortest_paths[i].getZipcode() << " is " << shortest_paths[i].getDistance() << endl;
+			}
+			cout << endl;
+
+			graph.resetGraph();
+		}
+	}
+
 	// close all I/O streams
 	vehicle_data.close();
 	distance_data.close();
@@ -55,6 +83,19 @@ int main()
 
 	system("pause");
 	return 0;
+}
+
+int findZipcodeIdx(Graph g, int zip)
+{
+	vector<Zipcode> zipcodes = g.getGraph();
+	for (int i = 0; i < zipcodes.size(); i++)
+	{
+		if (zipcodes[i].getZipcode() == zip)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 void readInRequests(vector<Request>& requests, ifstream& in)
