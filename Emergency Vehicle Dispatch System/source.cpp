@@ -63,12 +63,11 @@ int main()
 		int idx_of_zip = findZipcodeIdx(graph, requests[i].zipcode);
 		if (idx_of_zip != -1)
 		{
-			graph.dijkstras(idx_of_zip);
-			vector<Zipcode> shortest_paths = graph.getGraph();
+			multimap<int, Zipcode> shortest_paths = graph.dijkstras(idx_of_zip);
 
-			for (int i = 0; i < shortest_paths.size(); i++)
+			for (auto it = shortest_paths.begin(); it != shortest_paths.end(); ++it)
 			{
-				cout << "Shortest path from " << graph.getGraph()[idx_of_zip].getZipcode() << " to " << shortest_paths[i].getZipcode() << " is " << shortest_paths[i].getDistance() << endl;
+				cout << "Shortest path from " << graph.getGraph()[idx_of_zip].getZipcode() << " to " << it->second.getZipcode() << " is " << it->first << endl;
 			}
 			cout << endl;
 
