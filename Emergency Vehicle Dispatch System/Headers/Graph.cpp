@@ -7,10 +7,11 @@ void Graph::addZipcode(Zipcode new_zip)
 
 void Graph::addVehicleToZip(EmergencyVehicle vehicle_to_add)
 {
+	// add vehicle to most recent zipcode
 	zipcodes.back().addVehicle(vehicle_to_add);
 }
 
-void Graph::populateGraph(std::ifstream& in)
+void Graph::populateGraph(std::ifstream& in) // place zipcodes on graph and add vehicles
 {
 	int vehicle_id = 0;
 	int vehicle_type = 0;
@@ -69,13 +70,11 @@ void Graph::addEdges(std::ifstream& in)
 		Edge edge2(idx_of_first_zip, distance);
 		zipcodes[idx_of_next_zip].addAdjacentEdge(edge2);
 
-		//std::cout << zipcodes[idx_of_first_zip].getZipcode() << " is connected to " << zipcodes[idx_of_next_zip].getZipcode() << std::endl;
-
 		previous_zip = zipcode1;
 	}
 }
 
-int Graph::getMinZipcode(std::vector<Zipcode> z)
+int Graph::getMinZipcode(std::vector<Zipcode> z) // return unvisited zipcode with minimum distance
 {
 	Zipcode min;
 	int idx = 0;
@@ -107,6 +106,11 @@ void Graph::resetGraph()
 		zipcodes[i].setDistance(INFINITY);
 		zipcodes[i].setVisited(false);
 	}
+}
+
+void Graph::allocateVehicleAtZip(int idx, int vehicle_id)
+{
+	zipcodes[idx].allocateVehicle(vehicle_id);
 }
 
 std::multimap<int, Zipcode> Graph::dijkstras(int current_idx)

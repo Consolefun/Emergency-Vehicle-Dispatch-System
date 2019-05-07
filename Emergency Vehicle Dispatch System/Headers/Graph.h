@@ -20,6 +20,7 @@ public:
   void addEdges(std::ifstream& in);
   int getMinZipcode(std::vector<Zipcode> z);
   void resetGraph();
+  void allocateVehicleAtZip(int idx, int vehicle_id);
   std::multimap<int, Zipcode> dijkstras(int idx);
 
 };
