@@ -17,8 +17,10 @@ public:
   void addVehicleToZip(EmergencyVehicle vehicle_to_add);
   void populateGraph(std::ifstream& in);
   void addEdges(std::ifstream& in);
+  int getMinZipcode(std::vector<Zipcode> z);
+  void resetGraph();
+  void dijkstras(int idx);
+
 };
-
-
 
 #endif

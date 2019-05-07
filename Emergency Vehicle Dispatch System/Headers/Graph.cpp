@@ -44,21 +44,89 @@ void Graph::addEdges(std::ifstream& in)
 	int previous_zip = 0;
 	int idx_of_first_zip = 0;
 	int idx_of_next_zip = 0;
+
+	bool first_iteration = true;
 	while (in >> zipcode1 >> zipcode2 >> distance)
 	{
-		idx_of_next_zip = (zipcode2 % 10) + 1;
-		if (previous_zip != zipcode1)
+		if (first_iteration)
 		{
-			idx_of_first_zip++;
+			previous_zip = zipcode1;
+			first_iteration = false;
+		}
+		else
+		{
+			if (previous_zip != zipcode1)
+			{
+				idx_of_first_zip++;
+			}
 		}
 
-		Edge edge1(zipcode2, distance);
+		idx_of_next_zip = (zipcode2 % 10) + 1;
+
+		Edge edge1(idx_of_next_zip, distance);
 		zipcodes[idx_of_first_zip].addAdjacentEdge(edge1);
 
-		
-		Edge edge2(zipcode1, distance);
+		Edge edge2(idx_of_first_zip, distance);
 		zipcodes[idx_of_next_zip].addAdjacentEdge(edge2);
 
+		//std::cout << zipcodes[idx_of_first_zip].getZipcode() << " is connected to " << zipcodes[idx_of_next_zip].getZipcode() << std::endl;
+
 		previous_zip = zipcode1;
+	}
+}
+
+int Graph::getMinZipcode(std::vector<Zipcode> z)
+{
+	Zipcode min;
+	int idx = 0;
+	for (int i = 0; i < z.size(); i++)
+	{
+		if (!z[i].isVisited())
+		{
+			min = z[i];
+			idx = i;
+			break;
+		}
+	}
+
+	for (int i = 1; i < z.size(); i++)
+	{
+		if (z[i].getDistance() < min.getDistance() && !z[i].isVisited())
+		{
+			min = z[i];
+			idx = i;
+		}
+	}
+	return idx;
+}
+
+void Graph::resetGraph()
+{
+	for (int i = 0; i < zipcodes.size(); i++)
+	{
+		zipcodes[i].setDistance(INFINITY);
+		zipcodes[i].setVisited(false);
+	}
+}
+
+void Graph::dijkstras(int current_idx)
+{
+	std::vector<Zipcode> visited_zipcodes;
+
+	zipcodes[current_idx].setDistance(0);
+	while (visited_zipcodes.size() != zipcodes.size())
+	{
+		std::vector<Edge> adjacents = zipcodes[current_idx].getAdjacents();
+
+		for (int i = 0; i < adjacents.size(); i++)
+		{
+			if (zipcodes[current_idx].getDistance() + adjacents[i].distance < zipcodes[adjacents[i].target_idx].getDistance())
+			{
+				zipcodes[adjacents[i].target_idx].setDistance(zipcodes[current_idx].getDistance() + adjacents[i].distance);
+			}
+		}
+		zipcodes[current_idx].setVisited(true);
+		visited_zipcodes.push_back(zipcodes[current_idx]);
+		current_idx = getMinZipcode(zipcodes);
 	}
 }
