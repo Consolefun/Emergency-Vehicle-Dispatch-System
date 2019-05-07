@@ -28,10 +28,11 @@ public:
 	void setZipcode(int new_zip) { zipcode = new_zip; };
 	void setDistance(float new_distance) { min_distance = new_distance; };
 	void setVisited(bool flag) { visited = flag; };
-	
+
 	//Member functions
 	void addAdjacentEdge(Edge new_edge);
 	void addVehicle(EmergencyVehicle new_vehicle);
+	void allocateVehicle(int id);
 };
 
 #endif /* end of include guard: */
