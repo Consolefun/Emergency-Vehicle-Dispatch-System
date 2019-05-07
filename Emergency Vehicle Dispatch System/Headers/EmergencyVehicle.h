@@ -11,7 +11,8 @@ struct EmergencyVehicle
 
   EmergencyVehicle()
   {
-	  id, type = 0;
+	  id = 0;
+	  type = 0;
 	  available = true;
   }
 

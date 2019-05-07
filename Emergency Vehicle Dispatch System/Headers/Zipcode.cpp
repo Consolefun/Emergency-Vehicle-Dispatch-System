@@ -16,3 +16,15 @@ void Zipcode::addVehicle(EmergencyVehicle new_vehicle)
 {
 	vehicles.push_back(new_vehicle);
 }
+
+void Zipcode::allocateVehicle(int id)
+{
+	for (int i = 0; i < vehicles.size(); i++)
+	{
+		if (vehicles[i].id == id)
+		{
+			vehicles[i].available = false;
+			break;
+		}
+	}
+}
