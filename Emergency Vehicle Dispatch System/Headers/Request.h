@@ -15,6 +15,7 @@ struct Request
 	  type = new_type;
 	  zipcode = new_zip;
 	  vehicle_id = new_vehicle_id;
+	  distance = 0;
   }
 
   void fillRequest(int id, int dist)
